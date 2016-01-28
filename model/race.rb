@@ -15,7 +15,20 @@ class Race
     @num_teams = num_teams.to_i
     @track_length = track_length.to_i
     @finished_times = Array.new(@num_teams)
+    @time = 0
     align_cars
+  end
+
+  def num_teams
+    @num_teams
+  end
+
+  def track_length
+    @track_length
+  end
+
+  def cars
+    @cars
   end
 
   # Main simulation. For each iteration, we adjust the speed of each car,
@@ -27,28 +40,6 @@ class Race
     while !@race_finished
       reassess_speed
       step
-    end
-  end
-
-  # Pretty-print for console log
-  def display_final_state
-    puts 'Car No.      Final Speed      Finished Time'
-    @cars.each do |car|
-      puts "#{car.id}            #{'%.2f' % car.speed}              #{@finished_times[car.id-1]}"
-    end
-  end
-
-  private
-
-  # Set the initial positions of the cars
-  def align_cars
-    @cars = Array.new(@num_teams) do |i|
-      position = -100*i*(i+1)
-      top_speed = (150 + 10*(i+1)) * 5.0/18 # meter per second
-      acceleration = 2*(i+1)
-      hf = 0.8
-
-      Car.new(position, top_speed, acceleration, hf)
     end
   end
 
@@ -89,6 +80,28 @@ class Race
         @finished_times[car.id-1] = @time
         car.stop
       end
+    end
+  end
+
+  # Pretty-print for console log
+  def display_final_state
+    puts 'Car No.      Final Speed      Finished Time'
+    @cars.each do |car|
+      puts "#{car.id}            #{'%.2f' % car.speed}              #{@finished_times[car.id-1]}"
+    end
+  end
+
+  private
+
+  # Set the initial positions of the cars
+  def align_cars
+    @cars = Array.new(@num_teams) do |i|
+      position = -100*i*(i+1)
+      top_speed = (150 + 10*(i+1)) * 5.0/18 # meter per second
+      acceleration = 2*(i+1)
+      hf = 0.8
+
+      Car.new(position, top_speed, acceleration, hf)
     end
   end
 
